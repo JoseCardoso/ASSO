@@ -1,0 +1,7 @@
+base   contentassist
+author Vitor Teixeira
+email  vitorF24@gmail.com
+date   2016-06-11
+name   contentassist plugin
+desc   Javascript Content Assist
+url    http://www.dokuwiki.org/plugin:contentassist
