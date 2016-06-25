@@ -1,6 +1,5 @@
 /* DOKUWIKI:include vendor/esprima.js */
 /* DOKUWIKI:include vendor/textarea-caret-position.js */
-/* DOKUWIKI:include vendor/jquery.textcomplete.js */
 
 jQuery(function() {
 
