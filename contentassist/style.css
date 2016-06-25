@@ -6,8 +6,6 @@
     overflow: auto;
     overflow-x: -moz-hidden-unscrollable;
     overflow-x: hidden;
-    overflow: hidden;
-    overflow-y: scroll;
 }
 .dropdown-menu li {
     border-top: 1px solid #ddd;
@@ -41,4 +39,17 @@
 }
 #textcomplete-dropdown-1 {
     min-width: 300px;
+}
+.page-info-toolbar button {
+    display: block;
+}
+.ui-dialog {
+    padding: .3em;
+}
+.update-tip {
+    border: 1px solid transparent;
+    padding: 0.3em;
+}
+.ui-widget {
+    font-size: inherit;
 }
