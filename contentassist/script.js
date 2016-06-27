@@ -7,7 +7,7 @@
 jQuery(function() {
 
 	//globals
-	var githubSuggestions, wikiPageSuggestions ,words = [];
+	var githubSuggestions, wikiPageSuggestions=[] ,words = [];
 
 	function insertGitHubButtonButton() {
 
@@ -45,9 +45,12 @@ jQuery(function() {
      function clickToggleDoku() {
     	if(jQuery("#doku-form").dialog('isOpen'))
     		jQuery("#doku-form").dialog("close");
-    	else jQuery("#doku-form").dialog("open");
+    	else{
+            jQuery("#doku-form").dialog("open");
+            makeDokuAjaxCall();
+        }
 
-    	makeDokuAjaxCall();
+    	
     }
 
     function makeDokuAjaxCall(){
@@ -58,7 +61,6 @@ jQuery(function() {
 
     	jQuery.ajax({url: "lib/exe/ajax.php",type: "POST", data: {call: 'linkwiz', q: link.val()} , 
     		success: function(result){
-		        console.log(result);
 		        var divs = '<div id="results"></div>';
 		      	jQuery("#results").remove();
 		        jQuery("#doku-form").append(divs);
@@ -71,20 +73,9 @@ jQuery(function() {
 
 
     function addDokuSuggestionsAjaxCall(link){
-
-    	
 		link.removeClass( "ui-state-error" );
-
-		console.log("link.val() = "+ link.val());
-    	jQuery.ajax({url: "lib/exe/ajax.php",type: "POST", data: {call: 'linkwiz', q: link.val()} , 
-    		success: function(result){
-		        console.log(result);
-		        wikiPageSuggestions = getSuggestions(parsePageContentBox(result));
-		    	}, 
-		    error: function(){
-		    		updateTip("Error getting content, check if your git fields are valid.");
-		    	}});
-
+        getAjaxData(link.val());
+        jQuery('#doku-form').dialog('close');
     }
 
     function onResultClick(e){
@@ -101,12 +92,10 @@ jQuery(function() {
      */
     function resultClick(a){
         if(a.title == '' || a.title.substr(a.title.length-1) == ':'){
-            console.log("mudar valor em cima e chamar auto-complete");
             jQuery("#link").val(a.title);
 
 
         }else{
-            console.log("mudar valor em cima para o selecionado");
             jQuery("#link").val(a.title);
 
         }
@@ -307,10 +296,10 @@ jQuery(function() {
     	jQuery.post( 
     		DOKU_BASE + 'lib/exe/ajax.php',
     		{call:'autocomplete_pageCnt',
-    		pageid: 'test'
+    		pageid: page
     	},
     	function (data) {
-    		console.log(data);
+            wikiPageSuggestions = wikiPageSuggestions.concat( getSuggestions(parsePageContentBox(data.content)));
     	});
     }
 
@@ -331,7 +320,8 @@ jQuery(function() {
     	search: function (term, callback) {
     		var suggestions = getSuggestions(parseEditBox());
     		suggestions.push.apply(suggestions, words);
-    		suggestions.push.apply(suggestions, githubSuggestions);
+            suggestions.push.apply(suggestions, githubSuggestions);
+            suggestions.push.apply(suggestions, wikiPageSuggestions);
     		callback(jQuery.map(suggestions, function (word) {
     			return word.indexOf(term) === 0 ? word : null;
     		}));
