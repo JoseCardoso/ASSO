@@ -1,5 +1,8 @@
 /* DOKUWIKI:include vendor/esprima.js */
-/* DOKUWIKI:include vendor/jquery-textcomplete.js */
+/* DOKUWIKI:include vendor/jquery.textcomplete.js */
+
+
+
 
 jQuery(function() {
 
@@ -19,12 +22,79 @@ jQuery(function() {
     	toolbarObj.appendChild(this.buttonObj);
     }
 
+    function insertLinkButtonButton() {
+
+    	// create ToolBar Button with git_autocomplete id and add it to the toolbar
+    	var toolbarObj = document.getElementById('tool__bar');
+    	if (toolbarObj == null)
+    		return;
+
+    	this.buttonObj = createToolButton('../../plugins/contentassist/link.png','Setup Dokuwiki Autocomplete','l','doku_autocomplete');
+    	createModalInputsDoku();
+    	this.buttonObj.onclick = function(){clickToggleDoku();};
+    	toolbarObj.appendChild(this.buttonObj);
+    }
+
     //click toggle for form-dialog
     function clickToggle() {
     	if(jQuery("#dialog-form").dialog('isOpen'))
     		jQuery("#dialog-form").dialog("close");
-    	else jQuery("#dialog-form").dialog("open");;
+    	else jQuery("#dialog-form").dialog("open");
     }
+
+     function clickToggleDoku() {
+    	if(jQuery("#doku-form").dialog('isOpen'))
+    		jQuery("#doku-form").dialog("close");
+    	else jQuery("#doku-form").dialog("open");
+
+    	makeDokuAjaxCall();
+    }
+
+    function makeDokuAjaxCall(){
+		
+		link = jQuery("#link");
+		link.removeClass( "ui-state-error" );
+
+
+    	jQuery.ajax({url: "lib/exe/ajax.php",type: "POST", data: {call: 'linkwiz', q: link.val()} , 
+    		success: function(result){
+		        console.log(result);
+		        var divs = '<div id="results"></div>';
+		      	jQuery("#results").remove();
+		        jQuery("#doku-form").append(divs);
+		        jQuery("#results").html(result);
+		    	}, 
+		    error: function(){
+		    		updateTip("Error getting content, check if your git fields are valid.");
+		    	}});
+    }
+
+    function onResultClick(e){
+        if(!jQuery(this).is('a')) {
+            return;
+        }
+        e.stopPropagation();
+        e.preventDefault();
+        resultClick(this);
+        return false;
+    };
+    /**
+     * Handles the "click" on a given result anchor
+     */
+    function resultClick(a){
+        if(a.title == '' || a.title.substr(a.title.length-1) == ':'){
+            console.log("mudar valor em cima e chamar auto-complete");
+            jQuery("#link").val(a.title);
+
+
+        }else{
+            console.log("mudar valor em cima para o selecionado");
+            jQuery("#link").val(a.title);
+
+        }
+        makeDokuAjaxCall();
+    };
+
 
     //makes github ajax call to get contents
     function makeGitAjaxCall(owner, repos, branch, path) {
@@ -121,9 +191,43 @@ jQuery(function() {
     	return;
     }
 
+    function createModalInputsDoku() {
+    	var dialog, link,form, formDiv = document.createElement('div');
+    	formDiv.innerHTML = '<div id="doku-form" title="Setup Dokuwiki page"><p class="update-tip">All form fields are required.</p><form><fieldset><input type="text" name="link" placeholder=" Link" id="link" class="text ui-widget-content ui-corner-all" ><input type="submit" tabindex="-1" style="position:absolute; top:-1000px"></fieldset></form></div> <div id="doku-results" title="Results"> </div>';
+    	document.body.appendChild(formDiv);
+    	dialog = jQuery('#doku-form');
+    	form =  dialog.find("form");
+    	link = jQuery("#link");
+    	form = dialog.find("form").on("submit", function(event) {
+    		event.preventDefault();
+    		makeDokuAjaxCall();
+    	});
+    	dialog.dialog({
+    		autoOpen: false,
+    		height: 320,
+    		width: 350,
+    		modal: true,
+    		open: function(event, ui) {
+      			jQuery(this).dialog('widget').position({ my: "center", at: "center", of: window });
+    		},
+    		buttons: {
+    			"Update": function() {makeDokuAjaxCall();},
+    			Cancel: function() {
+    				dialog.dialog("close");
+    			}
+    		},
+    		close: function() {
+    			form[0].reset();
+    			link.removeClass( "ui-state-error" );
+    		}
+    	});
+    	return;
+    }
+
+
     //parse code from editBox
     function parseEditBox() {
-    	var code = jQuery("#wiki__text").text();
+    	var code = jQuery("#wiki__text").val();
     	var codeStr = code.match(/(<code>(.|\n)*?<\/code>)+/g);
     	if(codeStr != null) {
     		for(i = 0; i < codeStr.length; i++) {
@@ -135,6 +239,8 @@ jQuery(function() {
     	}	
     	return '';
     }
+
+  
 
     //parse code from other dokuwiki pages
     function parsePageContentBox(code) {
@@ -198,6 +304,7 @@ jQuery(function() {
     	words.push('value');
     	words.push('document');
     	words.push('for');
+    	words.push('while');
     }
 
     //auto-complete listener
@@ -214,23 +321,33 @@ jQuery(function() {
     	template: function (value) {
     		return value;
     	},
+
     	replace: function (word) {
     		if(word == 'function')
     			return ['function','() {\n\n}'];
     		if(word == 'for') {
     			return ['var i;\nfor (i = 0; i < ','.length; i++) {\n\n}'];
     		}
+    		if(word == 'while'){
+    		return ['while','(i == 0) {\n\n}'];
+    		}
     		return word + ' ';
     	}
     }]);
 
+     function startLinkListener() {
+	    jQuery("#doku-form").delegate('a', 'click', onResultClick);
+	    jQuery("#link").keyup(makeDokuAjaxCall);
+    }
+
     function init() {
     	reservedWords();
     	insertGitHubButtonButton();
+    	insertLinkButtonButton();
+    	startLinkListener();
     }
 
     init();
-
 });
 
 
