@@ -7,7 +7,7 @@
 jQuery(function() {
 
 	//globals
-	var githubSuggestions, words = [];
+	var githubSuggestions, wikiPageSuggestions ,words = [];
 
 	function insertGitHubButtonButton() {
 
@@ -67,6 +67,24 @@ jQuery(function() {
 		    error: function(){
 		    		updateTip("Error getting content, check if your git fields are valid.");
 		    	}});
+    }
+
+
+    function addDokuSuggestionsAjaxCall(link){
+
+    	
+		link.removeClass( "ui-state-error" );
+
+		console.log("link.val() = "+ link.val());
+    	jQuery.ajax({url: "lib/exe/ajax.php",type: "POST", data: {call: 'linkwiz', q: link.val()} , 
+    		success: function(result){
+		        console.log(result);
+		        wikiPageSuggestions = getSuggestions(parsePageContentBox(result));
+		    	}, 
+		    error: function(){
+		    		updateTip("Error getting content, check if your git fields are valid.");
+		    	}});
+
     }
 
     function onResultClick(e){
@@ -200,7 +218,7 @@ jQuery(function() {
     	link = jQuery("#link");
     	form = dialog.find("form").on("submit", function(event) {
     		event.preventDefault();
-    		makeDokuAjaxCall();
+    		addDokuSuggestionsAjaxCall(link);
     	});
     	dialog.dialog({
     		autoOpen: false,
@@ -211,7 +229,7 @@ jQuery(function() {
       			jQuery(this).dialog('widget').position({ my: "center", at: "center", of: window });
     		},
     		buttons: {
-    			"Update": function() {makeDokuAjaxCall();},
+    			"Add Page to Autocomplete": function() {addDokuSuggestionsAjaxCall(link)},
     			Cancel: function() {
     				dialog.dialog("close");
     			}
