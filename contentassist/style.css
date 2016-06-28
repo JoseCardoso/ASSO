@@ -53,3 +53,41 @@
 .ui-widget {
     font-size: inherit;
 }
+
+#results {
+	background-color: #fff;
+    width: 320px;
+    height: 83px;
+    overflow: auto;
+    border: 1px solid #ccc;
+    text-align: left;
+    line-height: 1;
+}
+
+#results a{
+	color: green;
+	display: block;
+    padding-left: 22px;
+    min-height: 16px;
+    background: transparent 3px center no-repeat;
+}
+
+#results div.type_d a {
+    background-image: url(/dokuwiki/lib/tpl/dokuwiki/../../images/ns.png);
+}
+
+#results div.type_f a {
+    background-image: url(/dokuwiki/lib/tpl/dokuwiki/../../images/page.png);
+}
+
+#results div.even {
+    background-color: #ddd;
+}
+
+#results div.type_u a {
+    background-image: url(/dokuwiki/lib/images/toolbar/../../plugins/contentassist/download.png);
+}
+
+#results div{
+	padding: 3px 3px 3px 0;
+}
