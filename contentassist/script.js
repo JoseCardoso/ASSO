@@ -361,7 +361,7 @@ jQuery(function() {
             comp=true;
             jQuery('#wiki__text').textcomplete('trigger');
         }
-        else if(e.key=="Enter" || e.key==" ")
+        else if(e.key=="Enter" || e.key==" " || e.keyCode == 27)
             comp = false;
     }
 
@@ -369,6 +369,9 @@ jQuery(function() {
 	    jQuery("#doku-form").delegate('a', 'click', onResultClick);
 	    jQuery("#link").keyup(makeDokuAjaxCall);
         jQuery("#wiki__text").keydown(godown);
+        jQuery("body").on("click", function() {
+            comp = false;
+        });
     }
 
     function init() {
