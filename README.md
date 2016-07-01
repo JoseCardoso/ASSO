@@ -1,5 +1,4 @@
-# ASSO 
-## Content Assist
+# Content Assist
 
 ### How to install
 
@@ -12,3 +11,9 @@ note: to import code from DokuWiki, the targeted code must first be inside code 
 
 After finishing importing code, to view suggestions simply press ctrl+space. This will show a dropdown with all availabe suggestions.
 To cancel, press Esc, Space or click anywhere outside the dropdown.
+
+#### Plugin created by
+###### José Cardoso - ei12027@fe.up.pt
+###### José Oliveira - ei12081@fe.up.pt
+###### Leonardo Faria - ei12072@fe.up.pt
+###### Vítor Teixeira - ei12060@fe.up.pt  
