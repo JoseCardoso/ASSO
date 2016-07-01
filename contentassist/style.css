@@ -91,3 +91,37 @@
 #results div{
 	padding: 3px 3px 3px 0;
 }
+
+
+#dialog-form fieldset{
+	border: 1px solid #ccc;
+}
+
+#dialog-form p{
+	margin: 0 0 10px 0;
+}
+
+#dialog-form fieldset input {
+	padding: 3px;
+    margin-bottom: 4px;
+    background-repeat: no-repeat;
+    background-position-x: 5px;
+    padding-left:23px;
+    width:100%;
+}
+
+#repos {
+ background-image: url(/dokuwiki/lib/images/toolbar/../../plugins/contentassist/repo.svg);
+}
+
+#branch {
+	background-image: url(/dokuwiki/lib/images/toolbar/../../plugins/contentassist/git-branch.svg);
+}
+
+#owner {
+	background-image: url(/dokuwiki/lib/images/toolbar/../../plugins/contentassist/octoface.svg);
+}
+
+#path {
+	background-image: url(/dokuwiki/lib/images/toolbar/../../plugins/contentassist/file.svg);
+}
