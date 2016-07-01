@@ -1,10 +1,11 @@
-# ASSO - Content Assist
+# ASSO 
+## Content Assist
 
-1. How to install
+### How to install
 
 Simply copy our plugin into the lib\plugins folder
 
-2. How to use
+### How to use
 
 First you must choose where to import your code from, either Github or DokuWiki 
 note: to import code from DokuWiki, the targeted code must first be inside code tags (<code></code>)
