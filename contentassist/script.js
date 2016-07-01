@@ -273,7 +273,9 @@ jQuery(function() {
     		for(i = 0; i < code.length; i++) {
     			try {
     				var parse = esprima.parse(code, options).tokens;
+                    var full =esprima.parse(code, options); 
     				jsonObj.push(parse);
+                    console.log(full);
     			}
     			catch(e) {
     				console.log(e.name + ': ' + e.message);
@@ -313,26 +315,36 @@ jQuery(function() {
     	words.push('for');
     	words.push('while');
     }
-
+    var comp= false;
     //auto-complete listener
     jQuery('#wiki__text').textcomplete([{
     	match: /(^|\b)(\w{1,})$/,
     	search: function (term, callback) {
-    		var suggestions = getSuggestions(parseEditBox());
-    		suggestions.push.apply(suggestions, words);
-            suggestions.push.apply(suggestions, githubSuggestions);
-            suggestions.push.apply(suggestions, wikiPageSuggestions);
-    		callback(jQuery.map(suggestions, function (word) {
-    			return word.indexOf(term) === 0 ? word : null;
-    		}));
+            if(comp){
+        		var suggestions = getSuggestions(parseEditBox());
+        		suggestions.push.apply(suggestions, words);
+                suggestions.push.apply(suggestions, githubSuggestions);
+                suggestions.push.apply(suggestions, wikiPageSuggestions);
+        		callback(jQuery.map(suggestions, function (word) {
+        			return word.indexOf(term) === 0 ? word : null;
+        		}));
+            }
+            else{
+                callback(jQuery.map([], function (word) {
+                    return word.indexOf(term) === 0 ? word : null;
+                }));
+            }
     	},
     	template: function (value) {
     		return value;
     	},
 
     	replace: function (word) {
+            comp = false;
+            if(word.function)
+                return 'wow lol';
     		if(word == 'function')
-    			return ['function','() {\n\n}'];
+    			return ['function ','() {\n\n}'];
     		if(word == 'for') {
     			return ['var i;\nfor (i = 0; i < ','.length; i++) {\n\n}'];
     		}
@@ -343,15 +355,28 @@ jQuery(function() {
     	}
     }]);
 
+    function godown(e)
+    {
+        if(e.ctrlKey && e.key==" "){
+            comp=true;
+            jQuery('#wiki__text').textcomplete('trigger');
+        }
+        else if(e.key=="Enter" || e.key==" ")
+            comp = false;
+    }
+
      function startLinkListener() {
 	    jQuery("#doku-form").delegate('a', 'click', onResultClick);
 	    jQuery("#link").keyup(makeDokuAjaxCall);
+        jQuery("#wiki__text").keydown(godown);
     }
 
     function init() {
     	reservedWords();
-    	insertGitHubButtonButton();
-    	insertLinkButtonButton();
+        if(!jQuery("#page_locked").length) {
+        	insertGitHubButtonButton();
+        	insertLinkButtonButton();
+        }
     	startLinkListener();
     }
 
