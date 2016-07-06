@@ -9,7 +9,7 @@ Simply copy the folder content assist into the lib\plugins folder
 First you must choose where to import your code from, either Github or DokuWiki 
 note: to import code from DokuWiki, the targeted code must first be inside code tags (<code>var example</code>)
 
-<img style="float: right; max-width: 50%" src="/PrintScreens/Github link.png">
+<img style="float: right; max-width: 50%" width="50%" height="50%" src="/PrintScreens/Github link.png">
 <img style="float: left; width: 50%" src="/PrintScreens/DokuWiki link.png">
 
 
